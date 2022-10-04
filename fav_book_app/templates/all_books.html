@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Registration</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome, {{request.session.firstname}} !</h1>
+        <a href="/logout_user">Logout</a>
+    </header>
+    <hr>
+    {% for error in messages %}
+    <ul>
+        <li>
+            {{error}}
+        </li>
+    </ul>
+    {% endfor %}
+    <main>
+        <form action="/add_book/" method="post">
+            {% csrf_token %}
+            <h3>Add a favorite book</h3>
+            <p>Title: <input type="text" name="title"></p>
+            <p>Description: <input type="text" name="description"></p>
+            <button type="submit">Add</button>
+        </form>
+        <article>
+            <h3>All Books</h3>
+            {% for book in books %}
+            <div>
+                <h2><a href="/books/{{book.id}}/">{{book.title}}</a></h2>
+                <p>(added by {{book.uploaded_by.first_name}}{{book.uploaded_by.last_name}})</p>
+                {% if book in books_list_uploaded_by_user or book in books_list_liked_by_user %}
+                <p>(this is one of your favorites)</p>
+                {% else %}
+                <a href="/books/add_book_to_user_list_of_favorites/{{book.id}}/">Add to favorites</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </article>
+    </main>
+    
+</body>
+
+</html>

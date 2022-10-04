@@ -1,0 +1,7 @@
+body {
+  margin: 10% 20%;
+}
+main {
+  display: flex;
+  justify-content: space-around;
+}

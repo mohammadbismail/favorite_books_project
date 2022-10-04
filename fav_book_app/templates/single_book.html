@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Registration</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome, {{request.session.firstname}} !</h1>
+        <a href="/logout_user">Logout</a>
+    </header>
+    <hr>
+    <main>
+        <article>
+            <!-- logged in user id is equal to id of user who uploaded book  -->
+            {% if request.session.userid == book.uploaded_by.id %}
+            <form action="/update_book/" method="post">
+                {% csrf_token %}
+                <input type="text" name="title" value="{{book.title}}">
+                <input type="hidden" name="bookid" value="{{book.id}}">
+                <p>Added by: {{request.session.firstname}} {{request.session.lastname}}</p>
+                <p>Added on: {{book.created_at}}</p>
+                <p>Last update on: {{book.updated_at}}</p>
+                <label for="description">Description: </label><br>
+                <textarea name="description" id="description" cols="30" rows="3">{{book.description}}</textarea><br>
+                <button type="submit">Update</button>
+                <a href="/delete_book/{{book.id}}">Delete</a>
+            </form>
+            {% else %}
+            <a href="books/remove_book_from_user_favorite_list/{{book.id}}/">Un-favorite book</a>
+            {% endif %}
+        </article>
+        <article>
+            <h2>Users who like This book</h2>
+            <ul>{% if book in books_list_uploaded_by_user or book in books_list_liked_by_user %}
+                {% for user in user_list_who_like_this_book %}
+                <li>
+                    <p>{{ user.first_name }} {{ user.last_name }}
+                        {% endfor %}
+                        {% else %}
+                        <a href="/books/add_book_to_user_list_of_favorites/{{book.id}}/"> Add to favorites</a>
+                    </p>
+                </li>
+                {% endif %}
+            </ul>
+        </article>
+    </main>
+</body>
+
+</html>
