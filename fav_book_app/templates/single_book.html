@@ -33,22 +33,29 @@
                 <a href="/delete_book/{{book.id}}">Delete</a>
             </form>
             {% else %}
-            <a href="books/remove_book_from_user_favorite_list/{{book.id}}/">Un-favorite book</a>
+
+            <p>{{book.title}}</p>
+            <p>Added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}}</p>
+            <p>Added on: {{book.created_at}}</p>
+            <p>Last update on: {{book.updated_at}}</p>
+            <p>Decsription: {{book.description}}</p>
             {% endif %}
         </article>
         <article>
             <h2>Users who like This book</h2>
-            <ul>{% if book in books_list_uploaded_by_user or book in books_list_liked_by_user %}
+            <ul>
                 {% for user in user_list_who_like_this_book %}
                 <li>
                     <p>{{ user.first_name }} {{ user.last_name }}
-                        {% endfor %}
-                        {% else %}
-                        <a href="/books/add_book_to_user_list_of_favorites/{{book.id}}/"> Add to favorites</a>
-                    </p>
+                        {% if request.session.userid == user.id %}
+                    </p><a href="/books/remove_book_from_user_favorite_list/{{book.id}}/">Un favorite book</a>
+                    {% endif %}
+                    {% endfor %}
                 </li>
-                {% endif %}
             </ul>
+            {% if book not in book_list_liked_by_user%}
+            <a href="/books/add_book_to_user_list_of_favorites/{{book.id}}/"> Add to favorites</a>
+            {% endif %}
         </article>
     </main>
 </body>

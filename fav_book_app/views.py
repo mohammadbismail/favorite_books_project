@@ -48,9 +48,7 @@ def all_books_page(request):
         # all books
         "books": Book.objects.all(),
         # query of books(Childs) for one parent(User) (One --> Many)
-        "books_list_uploaded_by_user": User.objects.get(
-            id=request.session["userid"]
-        ).books_uploaded.all(),
+        "books_list_uploaded_by_user": User.objects.get(id=request.session["userid"]).books_uploaded.all(),
         "books_list_liked_by_user": User.objects.get(
             id=request.session["userid"]
         ).likes_books.all(),
@@ -91,6 +89,7 @@ def show_book(request, book_id):
         "books_list_uploaded_by_user": User.objects.get(
             id=request.session["userid"]
         ).books_uploaded.all(),
+        "book_list_liked_by_user": User.objects.get(id=request.session["userid"]).likes_books.all(),
     }
     print(context["user_list_who_like_this_book"])
     print(context["books_list_uploaded_by_user"])
@@ -109,7 +108,7 @@ def update_book(request):
     book.title = request.POST["title"]
     book.description = request.POST["description"]
     book.save()
-    return redirect(f"/books/")
+    return redirect("/books/")
 
 
 def add_book_to_user_list_of_favorites(request, book_id):
